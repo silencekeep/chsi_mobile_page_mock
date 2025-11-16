@@ -24,9 +24,7 @@
 
 ### 项目效果简图
 
-<img title="" src="file:///C:/Users/56279/AppData/Roaming/marktext/images/2025-11-16-18-46-46-image.png" alt="" width="522" data-align="center">
-
-<img title="" src="file:///C:/Users/56279/AppData/Roaming/marktext/images/2025-11-16-18-46-50-image.png" alt="" width="523" data-align="center">
+![Alt text]()
 
 ## 修改内容（手动配置config.json）
 
