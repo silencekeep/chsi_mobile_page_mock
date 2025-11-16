@@ -1,0 +1,444 @@
+﻿<!DOCTYPE html>
+<html data-dpr="1" style="font-size: 42.8px;"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no,viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>学信档案</title>
+    <link rel="icon" href="https://t1.chei.com.cn/archive/favicon.ico" type="image/x-icon">
+    <!-- 字体文件缺失不影响功能，已有字体覆盖样式 -->
+    <!-- <link rel="stylesheet" href="resources/chsi-font.css"> -->
+    <link rel="stylesheet" href="resources/app.css">
+    <link rel="stylesheet" href="resources/iconfont.css">
+    <!-- <link rel="stylesheet" href="resources/RareWordsFonts.css"> -->
+    <!-- Analytics 等外部统计脚本已禁用 -->
+    <!-- <script type="text/javascript" async="" src="resources/analytics.js"></script> -->
+    <script type="text/javascript" async="" src="resources/js_002"></script><script src="resources/hm.js"></script><script src="resources/vue.min.js"></script>
+    <script src="resources/vant.min.js"></script>
+    <script src="resources/api-1.0.4.js"></script>
+    <script src="resources/vendors-1.0.0.js"></script>
+    <script src="resources/app-1.0.3.js"></script>
+    <script src="resources/lodash.min.js"></script>
+    <script src="resources/jweixin-1.6.0.js"></script>
+    <style>
+        .extra-wrap{
+            display: flex;
+            align-items: center;
+        }
+        .extra-wrap .red{
+            margin-right: 5px;
+            color: #e85759;
+        }
+        .vote-order-ul li{
+            align-items: center;
+        }
+        .vote-order-ul .vue-checkbox{
+            display: inline-block;
+            margin-right: 10px;
+            white-space: nowrap;
+            position: relative;
+            line-height: 1;
+            vertical-align: middle;
+            cursor: pointer;
+            outline: 0;
+        }
+        .vote-order-ul .vue-checkbox .vue-checkbox-inner {
+            display: inline-block;
+            position: relative;
+            width: .426rem;
+            height: .426rem;
+            top: 0;
+            left: 0;
+            background-color: #fff;
+            border: 1px solid #969799;
+            border-radius: 2px;
+            transition: all .2s ease-in-out;
+        }
+        .vote-order-ul .vue-checkbox .checked-box-order {
+            display: inline-block;
+            position: relative;
+            width: .426rem;
+            height: .426rem;
+            top: 0;
+            left: 0;
+            color: #fff;
+            border-radius: 2px;
+            text-align: center;
+            background-color: #25b887;
+            border: 1px solid #25b887;
+            transition: all .2s ease-in-out;
+        }
+        .jy-vote .sub_sub_title{
+            font-size: .373rem;
+            margin-top: 0.45rem;
+            font-weight: 700;
+        }
+        .checkbox-trans-list-item {
+        transition: all 1s;
+        display: inline-block;
+        margin-right: 10px;
+        }
+        .checkbox-trans-list-enter, .checkbox-trans-list-leave-to{
+        opacity: 0;
+        transform: translateY(30px);
+        }
+        .checkbox-trans-list-leave-active {
+        position: absolute;
+        }
+        .gxbys-vote .line-input{
+            -webkit-appearance: none;
+            border-radius:0;
+        }
+        /* 重写字体 */
+        .nameFamily{
+            font-family: Chsi,"rare-words-font";
+        }
+        .sur-input{
+            /* width: 100%;            */
+            margin-left:.267rem;
+            padding: .133rem .267rem;
+            font-size: .4rem;
+            line-height: .56rem;
+            border: 1px solid #dde5ed;
+            box-sizing: border-box;
+            border-radius: .16rem;
+            -webkit-appearance: none;
+        }
+        .extra-wrap .sur-input{
+            flex:1
+        }
+        .wap-vote-jz{
+            border:1px solid #E8EAED;
+        }
+        .wap-vote-jz .jz-head{
+            display:flex;
+            background-color: #F7F8FA;
+            border-bottom:1px solid #E8EAED;
+            font-size: .373rem;
+            line-height: 2.5;            
+        }
+        .jy-vote .wap-vote-jz .jz-item{
+            flex:1;
+            text-align:center;
+        }
+        .jy-vote .wap-vote-jz .van-radio-group{
+            display:flex;
+            padding:0
+        }
+        .jy-vote .wap-vote-jz .van-radio-group .van-radio{
+            flex:1;
+            justify-content: center;
+        }
+        .jy-vote .wap-vote-jz p.sub_title{
+            padding-left:0;
+            padding-right:0;
+            font-weight:400;
+            font-size:0.347rem;
+        }
+        .jy-vote .wap-vote-jz p.shgl-vote{
+
+        }
+        .jy-vote .wap-vote-jz p.sub_title.extra-wrap{
+            padding-right:.267rem;
+        }        
+        .vote-vee .bg-des{
+            padding: .373rem;
+            background: #f7f9f9;
+        }
+        .shgl-vote .sm{
+            padding:0.267rem;
+            color:#666;
+            line-height:1.8;
+            font-size:.373rem;
+        }
+         .shgl-vote .sm p{
+            text-indent:2em;
+        }
+        .shgl-vote .sm .textR{
+            text-align:right;
+        }
+        .shgl-vote .wap-vote-jz .jz-head{
+            line-height: 1.3;
+            padding:0.267rem 0;
+            font-weight:700;
+        }
+        .shgl-vote.jy-vote .wap-vote-jz p.sub_title{
+            padding-left:0.267rem;
+            padding-right:0.267rem;
+        }
+        .shgl-vote .wap-vote-jz{
+            padding-bottom:0.32rem
+        }
+        .ques-checkbox div.van-checkbox__icon,
+        .ques-checkbox .select-border .van-icon {
+            width: 20px;
+        }
+        .checkbox-trans-list-item-2025 {
+            margin-right: 0;
+        }
+        .jy-vote .select-border-qzsj {
+            margin-top: 0;
+            padding: 0.05rem 0.16rem;
+            width: 2.2rem;
+            margin: 0 0.16rem;
+        }
+        .jy-vote .select-border-qzsj-box .select-border-qzsj:first-child {
+            width: 3.1rem;
+        }
+    </style>
+    
+<script async="" src="resources/js"></script>
+<script>
+// 放在ga.jsp 中
+function gaTrackerOutboundLink(ele,eventCategory,eventAction,eventLabel){
+    gtag('event', eventAction, {
+      'event_category': eventCategory,
+      'event_label': eventLabel
+    });
+    return true;
+}
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-100524-5', {'sample_rate': 5});
+</script>
+<script>
+    // 百度统计
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?ed4ddcd4078a486f1f5760a6c426b738";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+<style>
+/* 覆盖可能的私有区字体，强制显示真实文字 */
+.yxmc,.cc,.des,.student-name,.student-id, .list-card .yxmc-wrap div {
+  font-family: "PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif !important;
+  font-size: inherit;
+  font-weight: 400 !important;  /* 设置正常字重,不要admin加粗 */
+}
+/* 查看解决办法按钮样式 */
+.find-xjxl-bottom {
+  cursor: pointer !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.find-xjxl-bottom span {
+  cursor: pointer !important;
+}
+/* 广告容器样式 - 背景图片模式 */
+.vote-part {
+  margin: 0.267rem 0 0 0 !important;
+}
+.vote-part #vote_wap {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.vote-part .vote-jy-part {
+  display: block !important;
+  /* 以下样式会被动态注入的CSS覆盖 */
+  background-size: 100% !important;
+  padding: 0 !important;
+  height: 2.133rem !important;
+}
+/* 广告背景后备方案 - 当图片缺失时显示纯色背景 */
+.vote-part .vote_bg_kzxz {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  display: block !important;
+  height: 2.133rem !important;
+  min-height: 80px !important;
+}
+.vote-part .vote_bg_zcsx {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+  display: block !important;
+  height: 2.133rem !important;
+  min-height: 80px !important;
+}
+</style></head>
+<body style="font-size: 18px; line-height: 1.5;">
+    <div id="app" class="my-container"><div class="green-header van-nav-bar van-hairline--bottom" style="z-index: 1;"><div class="van-nav-bar__left"><i class="van-icon van-icon-arrow-left van-nav-bar__arrow"><!----><!----></i><!----></div><div class="van-ellipsis van-nav-bar__title">高等教育信息</div><div class="van-nav-bar__right"><!----></div></div> <div style="" class="vote-part"><div id="vote_wap" style="display: block;"><a href="https://xz.chsi.com.cn/cp/survey/yhdy4/show.action?from=gdjy_index_wap" style="display:block" onmousedown="clickVoteGa(this, 'kzxz')" class="vote-jy-part vote_bg_kzxz"></a></div></div> <!----> <div class="padding16 xjxl-list chsi-font"><div class="list-tit van-row"><div class="l van-col van-col--8">学籍信息 (0)</div> <div class="r van-col van-col--16">还有学籍没有显示出来？<a href="javascript:;">尝试绑定</a></div></div> <div class="list-tit van-row"><div class="l van-col van-col--8">学历信息 <!----></div> <div class="r van-col van-col--16">还有学历没有显示出来？<a href="javascript:;">尝试绑定</a></div></div> <div class="no-data"><h4>没有找到您的学历信息 <a href="https://www.chsi.com.cn/help/cxfw.jsp" target="_blank"><i title="查看" class="iconfont"></i></a></h4> <div class="find-xjxl"><div class="find-list van-row"><div class="van-col van-col--2"><span>1</span></div> <div class="paddL2 van-col van-col--16">
+                       有学历但是没显示出来
+                    </div> <div class="list-link van-col van-col--6"><a href="javascript:;">自行绑定</a></div></div> <div class="find-list van-row"><div class="van-col van-col--2"><span>2</span></div> <div class="paddL2 van-col van-col--22">
+                        确认您实名注册时提供的姓名和证件号码是否与学校注册信息一致，若不一致，请分情况处理。
+                        <div class="find-list-smzc van-row"><div class="van-col van-col--18">李四</div> <div class="list-link paddT11 van-col van-col--6"><a href="https://account.chsi.com.cn/account/account!editinfo" target="_blank">修改</a></div></div> <div class="van-row"><div class="van-col van-col--18">440101200002023456</div> <div class="list-link paddT11 van-col van-col--6"><a href="https://account.chsi.com.cn/account/preregister.action?from=my-noxlarch" target="_blank">重新注册</a></div></div></div></div> <div class="find-list van-row"><div class="van-col van-col--2"><span>3</span></div> <div class="paddL2 van-col van-col--22">
+                        若不能确定学校注册信息，请与就读院校学籍学历管理部门老师联系。
+                    </div></div></div> <div class="find-xjxl-bottom"><span class="colorGreen">查看解决办法 <i title="展开" class="iconfont"></i></span></div></div> <div class="list-tit van-row"><div class="l van-col van-col--8">学位信息 <!----></div> <div class="r van-col van-col--16">还有学位没有显示出来？<a href="javascript:;">尝试绑定</a></div></div> <div class="no-data"><h4 style="padding: 0px 0.3rem;"><h4 style="padding: 0px 0.3rem;">您还未绑定学位信息，可以使用"尝试绑定学位"功能绑定您的学位 <a href="https://www.chsi.com.cn/help/cxfw.jsp" target="_blank"><i title="查看" class="iconfont"></i></a></h4></h4> <div class="find-xjxl"><div class="find-list van-row"><div class="van-col van-col--2"><span>1</span></div> <div class="paddL2 van-col van-col--22">
+                        本系统提供社会查询的学位证书数据来源于相关学位授予单位经所在省（自治区、直辖市）学位委员会办公室报国务院学位委员会办公室备案的学位授予数据。
+                    </div></div> <div class="find-list van-row"><div class="van-col van-col--2"><span>2</span></div> <div class="paddL2 van-col van-col--22">
+                        请确保注册账号的“姓名”及“证件号码”无误，且对应的学位信息属于本系统<a href="https://www.chsi.com.cn/help/cxfw.jsp" target="_blank">查询范围</a>，若您未成功绑定学位信息，请与有关学位授予单位的学位管理部门联系核实。
+                    </div></div> <div class="find-list van-row"><div class="van-col van-col--2"><span>3</span></div> <div class="paddL2 van-col van-col--22">
+                        经核实后属学位授予信息漏报、错报的，由学位授予单位依照“学位授予信息补报、修改流程”更正相关内容。本网站无权修改任何数据。
+                    </div></div></div> <div class="find-xjxl-bottom"><span class="colorGreen">提示信息 <i title="展开" class="iconfont"></i></span></div></div> <div class="list-tit van-row"><div class="l van-col van-col--24">考研信息 <!----></div></div> <div class="no-data list-card"><div class="yxmc">您没有考研信息！</div> <div class="des">您目前没有考研信息，系统提供2006年以来入学的硕士研究生报名和成绩数据。</div></div> <!----> <!----> <!----> <!----> <!----> <!----> <div class="van-dialog" style="display: none;"><!----><div class="van-dialog__content"><div class="dialog-tip-div"><h3>没有学籍</h3>
+    系统没有找到您的在校生学籍信息，有可能是因为您注册时填写的姓名和证件号码两项与学校上报的学籍注册数据不相同导致的。<br><br>
+    1、查看您注册时填写的姓名和证件号码信息 <a href="https://account.chsi.com.cn/account/account!show" target="_blank">点击查看</a><br>
+    2、姓名和证件号码无误，我还有学籍没显示出来 <a href="javascript:;">找找看？</a></div></div><div class="van-hairline--top van-dialog__footer"><button class="van-button van-button--default van-button--large van-dialog__cancel" style="display: none;"><span class="van-button__text">
+        取消
+      </span></button><button class="van-button van-button--default van-button--large van-dialog__confirm"><span class="van-button__text">
+        确认
+      </span></button></div></div></div></div>
+    <script>
+        const dictionary1 = {
+            zh_CN: {
+                messages: {
+                    required: ( field )=> "该题为必填项，请填写完整后再提交。",
+                    numeric:function(name,a){
+                        var text='必须为数字'
+                        return text
+                    },
+                    between:function(name,a){
+                        var text='请选择'+a[0]+'项。'
+                        if(a[0]!=a[1]){
+                            text='请选择'+a[0]+'~'+a[1]+'项。'
+                        }
+                        return text
+                    }
+                }
+            }
+        };
+        Validator.updateDictionary(dictionary1);
+    </script>
+    <script>
+    var myVue = new Vue({
+            el: '#app',
+            data:function(){
+               return {
+                activeBottom:0,
+                topText:'学信档案' //标题文字
+               }
+            },
+            mixins: typeof mixin != 'undefined' ? [mixin] : {},
+            created:function(){
+            },
+            methods:{
+                onClickLeft:function(){ //左上的返回按钮
+                    history.back(-1);
+                },
+                goToIndex:function(){
+                    window.location.href='https://my.chsi.com.cn/archive/wap/index.action';
+                },
+                getQueryString:function(name) {//获取地址栏参数
+                    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+                    var r = window.location.search.substr(1).match(reg);
+                    if (r != null) {
+                    return unescape(r[2]);
+                    }
+                    return null;
+                },
+                VoteGoToIndex:function(){//投票完成返回首页
+                    var _from = this.getQueryString('from');
+                    if(_from=='archive-dctp-wap'){
+                        window.location.href='https://my.chsi.com.cn/archive/survey/index.action';
+                    }else{
+                        window.location.href='https://my.chsi.com.cn/archive/wap/index.action';
+                    }
+                },
+                addCookie:function(name,value){ //设置cookie
+                    var cookieString=name+"="+escape(value);
+                    document.cookie=cookieString;
+                    document.cookie.setSecure=true;//只允许在https环境下使用cookie
+                },
+                getCookie:function(name){
+                    var strCookie=document.cookie;
+                    var arrCookie=strCookie.split("; ");
+                    for(var i=0;i<arrCookie.length;i++){
+                        var arr=arrCookie[i].split("=");
+                        if(arr[0]==name)return arr[1];
+                    }
+                    return "";
+                },
+                trimSpace:function(s){//去掉左右空格
+                    return s.replace(/(^\s*)|(\s*$)/g, "");
+                },
+                showSfhyOrder:function(){
+                    //展示身份核验方式的序号，动态组合显示方式一、二、三
+                    var nodeList = document.getElementsByClassName('verify-list')[0].getElementsByClassName("verify-list-li");
+                    var liLen = nodeList.length;
+                    for(var i=0;i<liLen;i++){
+                        nodeList[i].getElementsByTagName('div')[0].innerText = '方式 '+(i+1);
+                    }
+                },
+                noticeFace :function(from, chinal){
+                    var _this =this;
+                    api.syncAjax('post', 'https://my.chsi.com.cn/archive/gdjy/check/face/notice.action', {data:{from:from,chinal:chinal}}).then(function(res){
+                        if (res.status==0) {
+                            window.location.href = res.result;
+                        }else{
+                            _this.$toast(res.message);
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+
+<script type="text/javascript">
+    //解决手机浏览器自带返回 没刷新问题
+    (function() {
+        var isPageHide = false;
+        window.addEventListener('pageshow', function() {
+          if (isPageHide) {
+            var curUrl =window.location.href,
+                curIndex=curUrl.substring(curUrl.indexOf('wap/')+4);
+            if(curIndex=='my.jsp'){
+                myVue.$data.activeBottom =4;
+            }else{
+                myVue.$data.activeBottom =0;
+            }
+          }
+        });
+        window.addEventListener('pagehide', function() {
+          isPageHide = true;
+        });
+    })();
+    
+    //优化加载效果
+    document.addEventListener('DOMContentLoaded', function() {
+        // 页面内容已准备就绪
+        // 调用支付宝小程序提供的通信方法，通知小程序隐藏加载中效果
+        if (window.AlipayJSBridge) {             
+            AlipayJSBridge.call('hideLoading');
+        } else {
+            document.addEventListener('AlipayJSBridgeReady', function() {
+            AlipayJSBridge.call('hideLoading');
+            }, false);
+        }
+        // 学信网App
+        if(window.ChesiccJsAPI){            
+            ChesiccJsAPI.dismissLoadingView();
+        }
+        
+        // 展开/折叠功能
+        document.querySelectorAll('.find-xjxl-bottom').forEach(function(btn) {
+            btn.style.cursor = 'pointer';
+            btn.addEventListener('click', function() {
+                var parent = this.previousElementSibling;
+                if (parent && parent.classList.contains('find-xjxl')) {
+                    var icon = this.querySelector('.iconfont');
+                    if (parent.style.display === 'none' || !parent.style.display) {
+                        parent.style.display = 'block';
+                        if (icon) {
+                            icon.style.transform = 'rotate(180deg)';  // 旋转180度
+                            icon.setAttribute('title', '收起');
+                        }
+                    } else {
+                        parent.style.display = 'none';
+                        if (icon) {
+                            icon.style.transform = 'rotate(0deg)';  // 恢复原状
+                            icon.setAttribute('title', '展开');
+                        }
+                    }
+                }
+            });
+            // 默认折叠
+            var parent = btn.previousElementSibling;
+            if (parent && parent.classList.contains('find-xjxl')) {
+                parent.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+</body></html>

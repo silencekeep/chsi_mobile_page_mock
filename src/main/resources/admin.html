@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学信档案管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 15px;
+        }
+        
+        .btn-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        button.delete {
+            background: #f44336;
+        }
+        
+        button.delete:hover {
+            background: #da190b;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close {
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .actions {
+            white-space: nowrap;
+        }
+        
+        .actions button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 学信档案管理后台</h1>
+        
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+        
+        <div class="btn-group">
+            <button onclick="showAddModal()">➕ 添加新记录</button>
+            <button onclick="loadRecords()">🔄 刷新</button>
+        </div>
+        
+        <table id="recordsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>院校</th>
+                    <th>专业</th>
+                    <th>层次</th>
+                    <th>学习形式</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="recordsBody">
+                <tr>
+                    <td colspan="7" style="text-align:center; padding: 40px;">加载中...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- 添加/编辑模态框 -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">添加学籍记录</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="recordForm">
+                <input type="hidden" id="recordId" name="id">
+                
+                <div class="form-group">
+                    <label for="studentName">姓名 *</label>
+                    <input type="text" id="studentName" name="studentName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="school">院校名称 *</label>
+                    <input type="text" id="school" name="school" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="major">专业 *</label>
+                    <input type="text" id="major" name="major" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="level">层次 *</label>
+                    <select id="level" name="level" required>
+                        <option value="">请选择</option>
+                        <option value="本科">本科</option>
+                        <option value="专科">专科</option>
+                        <option value="硕士研究生">硕士研究生</option>
+                        <option value="博士研究生">博士研究生</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studyForm">学习形式 *</label>
+                    <select id="studyForm" name="studyForm" required>
+                        <option value="">请选择</option>
+                        <option value="普通全日制">普通全日制</option>
+                        <option value="成人脱产">成人脱产</option>
+                        <option value="成人业余">成人业余</option>
+                        <option value="成人函授">成人函授</option>
+                        <option value="网络教育">网络教育</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">描述</label>
+                    <input type="text" id="description" name="description" placeholder="例如：在校生 | 入学时间">
+                </div>
+                
+                <div class="form-group">
+                    <label for="admissionDate">入学日期</label>
+                    <input type="date" id="admissionDate" name="admissionDate">
+                </div>
+                
+                <div class="form-group">
+                    <label for="graduationDate">毕（结）业日期</label>
+                    <input type="date" id="graduationDate" name="graduationDate">
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentId">学号</label>
+                    <input type="text" id="studentId" name="studentId">
+                </div>
+                
+                <div class="form-group">
+                    <label for="idCard">身份证号</label>
+                    <input type="text" id="idCard" name="idCard">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal()">取消</button>
+                    <button type="submit">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // 加载记录列表
+        function loadRecords() {
+            fetch('/admin/api/records')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('recordsBody');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 40px;">暂无记录</td></tr>';
+                        return;
+                    }
+                    
+                    tbody.innerHTML = data.map(record => `
+                        <tr>
+                            <td>${escapeHtml(record.id)}</td>
+                            <td>${escapeHtml(record.studentName)}</td>
+                            <td>${escapeHtml(record.school)}</td>
+                            <td>${escapeHtml(record.major)}</td>
+                            <td>${escapeHtml(record.level)}</td>
+                            <td>${escapeHtml(record.studyForm)}</td>
+                            <td class="actions">
+                                <button onclick="editRecord('${record.id}')">编辑</button>
+                                <button class="delete" onclick="deleteRecord('${record.id}')">删除</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                })
+                .catch(error => {
+                    showError('加载失败: ' + error.message);
+                });
+        }
+        
+        // 显示添加模态框
+        function showAddModal() {
+            document.getElementById('modalTitle').textContent = '添加学籍记录';
+            document.getElementById('recordForm').reset();
+            document.getElementById('recordId').value = '';
+            document.getElementById('editModal').style.display = 'block';
+        }
+        
+        // 编辑记录
+        function editRecord(id) {
+            fetch('/admin/api/records/' + id)
+                .then(response => response.json())
+                .then(record => {
+                    document.getElementById('modalTitle').textContent = '编辑学籍记录';
+                    document.getElementById('recordId').value = record.id;
+                    document.getElementById('studentName').value = record.studentName || '';
+                    document.getElementById('school').value = record.school || '';
+                    document.getElementById('major').value = record.major || '';
+                    document.getElementById('level').value = record.level || '';
+                    document.getElementById('studyForm').value = record.studyForm || '';
+                    document.getElementById('description').value = record.description || '';
+                    document.getElementById('admissionDate').value = record.admissionDate || '';
+                    document.getElementById('graduationDate').value = record.graduationDate || '';
+                    document.getElementById('studentId').value = record.studentId || '';
+                    document.getElementById('idCard').value = record.idCard || '';
+                    document.getElementById('editModal').style.display = 'block';
+                })
+                .catch(error => {
+                    showError('加载记录失败: ' + error.message);
+                });
+        }
+        
+        // 删除记录
+        function deleteRecord(id) {
+            if (!confirm('确定要删除这条记录吗？')) {
+                return;
+            }
+            
+            fetch('/admin/api/records/' + id, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccess('删除成功');
+                    loadRecords();
+                } else {
+                    showError(data.message || '删除失败');
+                }
+            })
+            .catch(error => {
+                showError('删除失败: ' + error.message);
+            });
+        }
+        
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        // 表单提交
+        document.getElementById('recordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const record = {};
+            formData.forEach((value, key) => {
+                if (value) record[key] = value;
+            });
+            
+            const id = document.getElementById('recordId').value;
+            const url = id ? '/admin/api/records/' + id : '/admin/api/records';
+            const method = id ? 'PUT' : 'POST';
+            
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(record)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccess(id ? '更新成功' : '添加成功');
+                    closeModal();
+                    loadRecords();
+                } else {
+                    showError(data.message || '操作失败');
+                }
+            })
+            .catch(error => {
+                showError('操作失败: ' + error.message);
+            });
+        });
+        
+        // 显示成功消息
+        function showSuccess(message) {
+            const alert = document.getElementById('successAlert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 显示错误消息
+        function showError(message) {
+            const alert = document.getElementById('errorAlert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // HTML转义
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // 页面加载时获取记录
+        loadRecords();
+    </script>
+</body>
+</html>

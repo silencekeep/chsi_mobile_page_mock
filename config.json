@@ -1,0 +1,42 @@
+{
+  "outputDir" : "dist",
+  "server" : {
+    "port" : 8080,
+    "host" : "0.0.0.0"
+  },
+  "ad" : {
+    "cssClass" : "vote-jy-part vote_bg_zcsx",
+    "enabled" : true,
+    "url" : "https://t3.chei.com.cn/archive/mobile/images/zcsx_bg.png"
+  },
+  "records" : [ {
+    "id" : "3upah3xzt6eg4o69",
+    "type" : "xl",
+    "school" : "家里蹲大学",
+    "level" : "本科",
+    "major" : "不知道什么专业",
+    "description" : "普通全日制"
+  }, {
+    "id" : "d5c74ftlwtdrk041",
+    "type" : "xw",
+    "school" : "网络喷子学院",
+    "level" : "学士",
+    "major" : "看看学信网",
+    "description" : ""
+  }, {
+    "id" : "ej7lo4tenft8d00v",
+    "type" : "ky",
+    "school" : "网络喷子学院",
+    "level" : "",
+    "major" : "114514年",
+    "description" : ""
+  }, {
+    "id" : "1macp2nc57p1913l",
+    "type" : "xj",
+    "school" : "家里蹲大学",
+    "level" : "专科",
+    "major" : "杠精科学与工程",
+    "description" : "普通全日制"
+  } ],
+  "sourceHtml" : "archive-template.html"
+}
